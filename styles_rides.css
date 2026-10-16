@@ -1,0 +1,170 @@
+/* Lernfahrten-Seite (rides.php): Kennzahlen, Streckenkarten mit Abschnitts-Matrix, Erfassungsformular. */
+
+.rv-rides {
+    --rv-border: #e3e6ea;
+    --rv-muted: #6b7280;
+    --rv-ok: #1e8e5a;
+    --rv-ok-bg: #e6f6ee;
+    --rv-warn: #b7791f;
+    --rv-warn-bg: #fff4dc;
+    --rv-primary: #2a5bd7;
+    --rv-radius: 12px;
+    max-width: 1200px;
+}
+
+.rv-rides h2 { margin: 0 0 4px; }
+.rv-lead { color: var(--rv-muted); margin: 0 0 18px; }
+
+/* Kennzahlen */
+.rv-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 12px;
+    margin: 0 0 22px;
+}
+.rv-stat {
+    background: #fff;
+    border: 1px solid var(--rv-border);
+    border-radius: var(--rv-radius);
+    padding: 14px 16px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
+}
+.rv-stat-label { font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; color: var(--rv-muted); }
+.rv-stat-value { font-size: 1.5rem; font-weight: 700; line-height: 1.25; margin-top: 2px; }
+.rv-stat-sub { font-size: .82rem; color: var(--rv-muted); margin-top: 2px; }
+
+/* Fortschrittsbalken */
+.rv-bar { height: 8px; background: #edf0f3; border-radius: 99px; overflow: hidden; margin-top: 8px; }
+.rv-bar > span { display: block; height: 100%; background: var(--rv-primary); border-radius: 99px; }
+.rv-bar.is-done > span { background: var(--rv-ok); }
+
+/* Layout: Fortschritt links, Formular rechts */
+.rv-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 380px;
+    gap: 22px;
+    align-items: start;
+}
+@media (max-width: 1000px) { .rv-layout { grid-template-columns: 1fr; } }
+.rv-side { position: sticky; top: 76px; }
+@media (max-width: 1000px) { .rv-side { position: static; } }
+
+/* Karten */
+.rv-card {
+    background: #fff;
+    border: 1px solid var(--rv-border);
+    border-radius: var(--rv-radius);
+    padding: 18px;
+    margin: 0 0 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .06);
+}
+.rv-card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 6px; }
+.rv-card-head h3, .rv-card-head h4 { margin: 0; font-size: 1.1rem; line-height: 1.3; }
+.rv-section-title { font-size: 1.15rem; margin: 26px 0 12px; }
+.rv-card.is-done { border-color: #cfe8da; background: #fbfefc; }
+.rv-card.is-warn { border-color: #f0d9a5; background: #fffdf8; }
+
+/* Matrix */
+.rv-card table.generaltable {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 10px 0 8px;
+    font-size: .9rem;
+    border: 1px solid var(--rv-border);
+    border-radius: 8px;
+    overflow: hidden;
+}
+.rv-card table.generaltable th {
+    background: #f4f6f8;
+    font-weight: 600;
+    font-size: .8rem;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    color: #4b5563;
+    padding: 8px 10px;
+    border: 0;
+    border-bottom: 1px solid var(--rv-border);
+}
+.rv-card table.generaltable td { padding: 8px 10px; border: 0; border-bottom: 1px solid #f0f2f4; vertical-align: middle; }
+.rv-card table.generaltable tr:last-child td { border-bottom: 0; }
+.rv-cell-ok { background: var(--rv-ok-bg); color: #14532d; }
+.rv-cell-missing { background: var(--rv-warn-bg); color: #7a4b00; }
+
+/* Fehlend-Chips */
+.rv-missing { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 4px; align-items: center; }
+.rv-chip { background: var(--rv-warn-bg); color: #7a4b00; border-radius: 99px; padding: 3px 10px; font-size: .82rem; }
+.rv-muted { color: var(--rv-muted); font-size: .88rem; }
+
+/* Ersetzungsregel */
+.rv-subst {
+    display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;
+    background: #f7f8fa; border-radius: 8px; padding: 8px 12px; margin-top: 8px; font-size: .9rem;
+}
+.rv-subst form { margin: 0; }
+
+/* Formular */
+.rv-form .rv-field { margin-bottom: 12px; }
+.rv-form label { display: block; font-weight: 600; font-size: .85rem; margin-bottom: 4px; }
+.rv-form .form-control { width: 100%; }
+.rv-form .rv-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.rv-form .rv-checkline { display: flex; gap: 8px; align-items: flex-start; margin: 4px 0 12px; font-size: .9rem; }
+.rv-form .rv-checkline input { margin-top: 4px; }
+.rv-form #r-trainer-results { position: relative; }
+.rv-form #r-trainer-results button { text-align: left; }
+.rv-sig-box { border: 1px dashed #9ca3af; border-radius: 8px; padding: 6px; background: #fafafa; }
+.rv-sig-box canvas { width: 100%; height: auto; border-radius: 6px; }
+.rv-submit { width: 100%; padding: 10px; font-weight: 600; }
+
+/* Zu bestätigen / Hinweise */
+.rv-callout { border-left: 4px solid var(--rv-warn); background: var(--rv-warn-bg); border-radius: 8px; padding: 12px 16px; margin: 0 0 18px; }
+.rv-callout ul { margin: 6px 0 0; padding-left: 18px; }
+
+/* Fahrten-Tabelle */
+.rv-rides table.rv-table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid var(--rv-border); border-radius: 10px; overflow: hidden; }
+.rv-rides table.rv-table th { background: #f4f6f8; font-size: .8rem; text-transform: uppercase; letter-spacing: .03em; color: #4b5563; padding: 10px 12px; text-align: left; }
+.rv-rides table.rv-table td { padding: 10px 12px; border-top: 1px solid #f0f2f4; }
+
+/* Galerie der Strecken (links) */
+.rv-gallery { display: flex; flex-direction: column; gap: 10px; }
+.rv-gal-card {
+    display: block; text-decoration: none !important; color: inherit !important;
+    background: #fff; border: 1px solid var(--rv-border); border-radius: var(--rv-radius);
+    padding: 12px 14px; box-shadow: 0 1px 2px rgba(0, 0, 0, .05); transition: box-shadow .15s, border-color .15s;
+}
+.rv-gal-card:hover { box-shadow: 0 2px 8px rgba(0, 0, 0, .12); }
+.rv-gal-card.is-selected { border-color: var(--rv-primary); box-shadow: 0 0 0 2px rgba(42, 91, 215, .18); }
+.rv-gal-card.is-done { background: #fbfefc; }
+.rv-gal-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+.rv-gal-name { font-weight: 600; line-height: 1.3; }
+.rv-segs { display: flex; gap: 3px; margin: 8px 0 6px; }
+.rv-seg { flex: 1 1 0; height: 8px; border-radius: 3px; background: #f0d9a5; min-width: 6px; }
+.rv-seg.is-ok { background: var(--rv-ok); }
+.rv-gal-sub { font-size: .8rem; color: var(--rv-muted); }
+
+/* Layout mit Galerie */
+.rv-layout { grid-template-columns: 290px minmax(0, 1fr); }
+@media (max-width: 1000px) { .rv-layout { grid-template-columns: 1fr; } }
+
+/* Raster Abschnitte x Lernfahrten */
+.rv-grid-wrap { overflow-x: auto; border: 1px solid var(--rv-border); border-radius: 10px; background: #fff; margin-top: 6px; }
+table.rv-grid { border-collapse: separate; border-spacing: 0; width: 100%; min-width: 520px; user-select: none; }
+table.rv-grid th, table.rv-grid td { border-bottom: 1px solid #f0f2f4; border-right: 1px solid #f0f2f4; padding: 0; height: 34px; text-align: center; font-size: .82rem; }
+table.rv-grid thead th { background: #f4f6f8; font-size: .76rem; text-transform: uppercase; letter-spacing: .03em; color: #4b5563; padding: 8px 6px; height: auto; position: sticky; top: 0; }
+table.rv-grid .rv-grid-first { text-align: left; padding: 6px 10px; min-width: 160px; background: #fafbfc; position: sticky; left: 0; z-index: 1; font-weight: 600; }
+table.rv-grid tr.rv-method-head th.rv-grid-first { background: #eef2fb; }
+table.rv-grid tr.rv-method-head td { background: #eef2fb; font-weight: 600; font-size: .78rem; }
+table.rv-grid td.rv-stand.is-ok { color: #14532d; background: var(--rv-ok-bg); }
+table.rv-grid td.rv-stand.is-missing { color: #7a4b00; background: var(--rv-warn-bg); }
+.rv-ride-label { font-weight: 500 !important; color: #374151; }
+.rv-ride-label.is-extra { color: var(--rv-muted); font-style: italic; }
+table.rv-grid td.rv-free { cursor: pointer; background: #fff; touch-action: none; }
+table.rv-grid td.rv-free:hover { background: #eaf1ff; }
+table.rv-grid td.rv-free.is-selected { background: var(--rv-primary); box-shadow: inset 0 0 0 1px #1e48b3; }
+table.rv-grid td.rv-ride { padding: 3px 8px; font-size: .78rem; line-height: 1.2; max-width: 0; }
+table.rv-grid td.rv-ride .rv-ride-main, table.rv-grid td.rv-ride .rv-ride-who { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+table.rv-grid td.rv-ride .rv-ride-who { font-size: .72rem; opacity: .85; }
+table.rv-grid td.rv-ride.is-confirmed { background: #bfe5cf; color: #14532d; }
+table.rv-grid td.rv-ride.is-pending { background: #ffe7a8; color: #7a4b00; }
+.rv-capture { border-color: var(--rv-primary); }
+.rv-selection { background: #eaf1ff; border-radius: 8px; padding: 8px 12px; margin-bottom: 12px; font-weight: 600; }
